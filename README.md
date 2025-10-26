@@ -10,6 +10,7 @@
 [![Swift](https://img.shields.io/badge/Swift-5.9-orange.svg)](https://swift.org)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-4.0.0-brightgreen.svg)](CHANGELOG.md)
+[![Build IPA](https://github.com/Heartcoolman/Tocik/actions/workflows/build-ipa.yml/badge.svg)](https://github.com/Heartcoolman/Tocik/actions/workflows/build-ipa.yml)
 
 [功能特性](#-功能特性) • [快速开始](#-快速开始) • [技术架构](#-技术架构) • [更新日志](CHANGELOG.md) • [贡献指南](#-贡献指南)
 
@@ -208,6 +209,18 @@ Tocik 是一款专为学生和学习者设计的全方位智能学习助手应�
 
 ## 🚀 快速开始
 
+### 📱 下载安装
+
+#### 方式一：下载预编译 IPA（推荐）
+
+访问 [Releases 页面](https://github.com/Heartcoolman/Tocik/releases) 下载最新版本的 IPA 文件。
+
+或从 [GitHub Actions](https://github.com/Heartcoolman/Tocik/actions) 下载最新构建的版本。
+
+> ⚠️ **注意**：IPA 文件是未签名的，需要使用 [AltStore](https://altstore.io/) 或 [Sideloadly](https://sideloadly.io/) 等工具重新签名后安装。
+
+#### 方式二：从源码构建
+
 ### 系统要求
 
 - **iOS** 17.0 或更高版本
@@ -215,7 +228,7 @@ Tocik 是一款专为学生和学习者设计的全方位智能学习助手应�
 - **Xcode** 15.0+ （开发需要）
 - **Swift** 5.9+
 
-### 安装步骤
+### 从源码安装
 
 #### 1. 克隆项目
 
