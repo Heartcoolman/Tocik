@@ -1,0 +1,149 @@
+# SwiftLint 配置文件
+# Tocik 项目代码质量规则
+
+# 包含的目录
+included:
+  - Tocik/Tocik/Tocik
+
+# 排除的目录
+excluded:
+  - Carthage
+  - Pods
+  - Build
+  - DerivedData
+  - .build
+
+# 禁用的规则
+disabled_rules:
+  - trailing_whitespace # 行尾空格（不影响功能）
+  - todo # TODO注释（允许使用）
+  - cyclomatic_complexity # 圈复杂度（某些业务逻辑确实复杂）
+  - function_body_length # 函数长度（SwiftUI视图可能较长）
+
+# 启用的可选规则
+opt_in_rules:
+  - weak_self # 要求在闭包中使用 [weak self]
+  - explicit_init # 明确初始化
+  - explicit_type_interface # 明确类型接口
+  - closure_spacing # 闭包空格
+  - empty_count # 使用isEmpty而非count == 0
+  - first_where # 使用first(where:)而非filter().first
+  - last_where # 使用last(where:)而非filter().last
+  - sorted_first_last # 排序后获取首尾元素
+  - redundant_nil_coalescing # 冗余的nil合并
+  - toggle_bool # 使用toggle()而非 = !
+  - unused_import # 未使用的import
+  - vertical_whitespace_closing_braces # 闭合花括号前的空行
+  - yoda_condition # Yoda条件（避免 if 5 == x）
+
+# 行长度
+line_length:
+  warning: 120
+  error: 200
+  ignores_function_declarations: true
+  ignores_comments: true
+  ignores_urls: true
+
+# 文件长度
+file_length:
+  warning: 500
+  error: 1000
+  ignore_comment_only_lines: true
+
+# 类型长度
+type_length:
+  warning: 300
+  error: 500
+
+# 函数参数数量
+function_parameter_count:
+  warning: 6
+  error: 8
+
+# 大型元组
+large_tuple:
+  warning: 3
+  error: 4
+
+# 嵌套深度
+nesting:
+  type_level:
+    warning: 2
+  statement_level:
+    warning: 5
+
+# 标识符命名
+identifier_name:
+  min_length:
+    warning: 2
+    error: 1
+  max_length:
+    warning: 50
+    error: 60
+  excluded:
+    - id
+    - url
+    - URL
+    - x
+    - y
+    - i
+    - j
+    - ai
+
+# 类型命名
+type_name:
+  min_length: 3
+  max_length:
+    warning: 40
+    error: 50
+  excluded:
+    - ID
+    - URL
+    - AI
+
+# 严格规则（错误级别）
+force_cast: error # 禁止强制类型转换
+force_try: error # 禁止强制try
+force_unwrapping: warning # 警告强制解包
+
+# 自定义规则
+custom_rules:
+  # 禁止使用print，应使用Logger
+  no_print:
+    name: "使用AppLogger替代print"
+    regex: '(?<!\/\/)print\s*\('
+    match_kinds: keyword
+    message: "请使用 AppLogger 替代 print()"
+    severity: warning
+    
+  # 禁止硬编码API密钥
+  no_hardcoded_keys:
+    name: "禁止硬编码API密钥"
+    regex: 'sk-[a-zA-Z0-9]{32,}'
+    message: "不要在代码中硬编码API密钥，请使用配置文件"
+    severity: error
+    
+  # Task中应使用weak self
+  weak_self_in_task:
+    name: "Task中使用weak self"
+    regex: 'Task\s*\{(?!\s*\[weak)'
+    message: "Task闭包中应使用 [weak self] 避免内存泄漏"
+    severity: warning
+    
+  # 数据库操作应记录日志
+  database_logging:
+    name: "数据库操作应记录日志"
+    regex: 'context\.(insert|delete|save)\('
+    message: "建议使用 AppLogger.database 记录数据库操作"
+    severity: warning
+    excluded: ".*Test.*"
+
+# 报告类型
+reporter: "xcode" # Xcode集成友好的格式
+
+# 排除特定文件的规则
+custom_rules_exclude:
+  - ".*Generated.*"
+  - ".*Pods.*"
+  - ".*Tests.*"
+

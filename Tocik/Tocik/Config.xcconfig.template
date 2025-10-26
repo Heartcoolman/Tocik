@@ -1,0 +1,14 @@
+//
+//  Config.xcconfig.template
+//  Tocik
+//
+//  配置模板文件 - 复制此文件为 Config.xcconfig 并填入真实的API密钥
+//
+
+// DeepSeek API 密钥
+// 获取地址: https://platform.deepseek.com/api_keys
+DEEPSEEK_API_KEY = your-api-key-here
+
+// 其他配置项
+// 如需添加其他敏感配置，请在此处添加
+
