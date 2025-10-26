@@ -1,0 +1,93 @@
+name: Build Archive (Alternative)
+
+on:
+  workflow_dispatch:  # 仅手动触发
+    inputs:
+      create_release:
+        description: 'Create a release'
+        required: false
+        default: 'false'
+
+jobs:
+  build-archive:
+    name: Build Xcode Archive
+    runs-on: macos-14
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.2'
+        
+    - name: Build Archive (No Code Sign)
+      working-directory: Tocik/Tocik
+      run: |
+        set -e
+        
+        echo "🔨 Building Tocik Archive..."
+        
+        # 创建构建目录
+        mkdir -p build
+        
+        # 构建 Archive（禁用代码签名）
+        xcodebuild archive \
+          -project Tocik.xcodeproj \
+          -scheme Tocik \
+          -configuration Release \
+          -archivePath build/Tocik.xcarchive \
+          -sdk iphoneos \
+          CODE_SIGN_IDENTITY="" \
+          CODE_SIGNING_REQUIRED=NO \
+          CODE_SIGNING_ALLOWED=NO \
+          | tee build/build.log | xcpretty || true
+          
+        echo "✅ Archive created successfully"
+        
+    - name: Package Archive
+      working-directory: Tocik/Tocik
+      run: |
+        # 压缩 Archive
+        cd build
+        zip -r Tocik.xcarchive.zip Tocik.xcarchive
+        
+        # 显示文件大小
+        ls -lh Tocik.xcarchive.zip
+        
+    - name: Extract APP
+      working-directory: Tocik/Tocik/build
+      run: |
+        # 提取 .app 文件
+        if [ -d "Tocik.xcarchive/Products/Applications/Tocik.app" ]; then
+          mkdir -p Payload
+          cp -r Tocik.xcarchive/Products/Applications/Tocik.app Payload/
+          
+          # 创建 IPA
+          zip -r Tocik-unsigned.ipa Payload
+          
+          echo "✅ IPA created: Tocik-unsigned.ipa"
+          ls -lh Tocik-unsigned.ipa
+        else
+          echo "❌ Tocik.app not found in archive"
+          find Tocik.xcarchive -name "*.app"
+        fi
+        
+    - name: Upload Archive
+      uses: actions/upload-artifact@v4
+      with:
+        name: Tocik-Archive
+        path: |
+          Tocik/Tocik/build/Tocik.xcarchive.zip
+          Tocik/Tocik/build/Tocik-unsigned.ipa
+        retention-days: 30
+        
+    - name: Upload Logs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-logs
+        path: Tocik/Tocik/build/*.log
+        retention-days: 7
+
